@@ -111,17 +111,17 @@ int pilhaVazia(t_pilha* p){
 int priorMaiorOuIgual(char atual,char c){
 	if(c == '*'||c == '/'){
 		if(atual == '+'||atual == '-'||atual == '('){
-			return 0;
+			return 1;
 		}
-		return 1;
+		return 0;
 	}
 	else if(c == '+'||c == '-'){
 		if(atual == '('){
-			return 0;
+			return 1;
 		}
-		return 1;
+		return 0;
 	}
-	return 1;
+	return 0;
 }
 
 t_lista* convertePosfixa(t_lista* infixa){
