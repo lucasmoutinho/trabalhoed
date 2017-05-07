@@ -43,6 +43,37 @@ int removeinicio(t_lista* l){
 	return tmp;
 }
 
+t_lista* crialista(){
+	t_lista* l = (t_lista*)malloc(sizeof(t_lista));
+	l->inicio=NULL;
+	l->fim=NULL;
+	return l;
+}
+
+int inserefim(int valor, t_lista* l){
+	t_elemento* nv;
+
+	nv = (t_elemento*)malloc(sizeof(t_elemento));
+	nv -> dado = valor;
+	nv -> proximo = NULL;
+	if(l -> inicio == NULL){
+		l -> inicio = nv; 
+	}
+	else{
+		l -> fim -> proximo = nv;
+	}
+	l -> fim = nv;
+	return 0;
+}
+
+int estavazia(t_lista* l){
+	if(l -> inicio == NULL){
+		return 1;
+	}
+	return 0;
+}
+/*Algs pilha*/
+
 t_pilha* criapilha(){
 	t_pilha* p = (t_pilha*)malloc(sizeof(t_pilha));
 	p->l = crialista();
