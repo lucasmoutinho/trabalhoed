@@ -9,7 +9,6 @@ void valida (char valor){
 	else if (expressao[i]==')'{
 		if (estavazia(p){
 			return 0;
-			testee;
 		}
 		else{
 			guarda = p -> fim -> dado;
