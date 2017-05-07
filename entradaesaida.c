@@ -7,8 +7,8 @@ void entrada(){
 	while (p==0){
 		while (expressao[i]!='\0' && continua==1){
 			inserefim (expressao[i], l);
-			i++;
 			continua=validacao();
+			i++;
 		}
 		p=1;
 		if (continua==0){
