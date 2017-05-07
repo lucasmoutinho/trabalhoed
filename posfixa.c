@@ -133,28 +133,61 @@ t_lista* convertePosfixa(t_lista* infixa){
 	while(atual!=NULL){
 		if(atual->dado == '*'||atual->dado == '/'||atual->dado == '+'||atual->dado == '-'||atual->dado == '('||atual->dado == ')'){
 			if(atual->dado == ')'){
-				while(!pilhaVazia(pilha) && desempilhado != '('){
+				desempilhado = desempilhar(pilha);
+				while(desempilhado != '('){
+					insereFim(desempilhado, posfixa);
 					desempilhado = desempilhar(pilha);
-					if(desempilhado != '('){
-						insereFim(desempilhado, posfixa);
-					}
 				}
 				desempilhado = '\0';
 			}
 			else{
 				while(!pilhaVazia(pilha) && priorMaiorOuIgual(atual->dado,pilha->l->inicio->dado)){
-					insereInicio(desempilhar(pilha), posfixa);
+					insereFim(desempilhar(pilha), posfixa);
 				}
-				empilhar(atual->dado, posfixa);
+				empilhar(atual->dado, pilha);
 			}
 		}
 		else{
 			insereFim(atual->dado,posfixa);
+			printf("%c\n", atual->dado);
 		}
 		atual = atual->proximo;
+	}
+	while(!pilhaVazia(pilha)){
+		insereFim(desempilhar(pilha), posfixa);
 	}
 	removeTudo(infixa);
 	free(infixa);
 	return posfixa;
+}
+
+int main(){
+	t_lista* infixa;
+	t_lista* posfixa;
+	t_elemento* atual;
+	infixa = criaLista();
+	insereFim('A', infixa);
+	insereFim('*', infixa);
+	insereFim('(', infixa);
+	insereFim('B', infixa);
+	insereFim('+', infixa);
+	insereFim('C', infixa);
+	insereFim(')', infixa);
+	insereFim('/', infixa);
+	insereFim('D', infixa);
+	atual = infixa->inicio;
+	while(atual!=NULL){
+		printf("%c ", atual->dado);
+		atual = atual->proximo;
+	}
+	printf("\n");
+	posfixa = convertePosfixa(infixa);
+	atual = posfixa->inicio;
+	while(atual!=NULL){
+		printf("%c ", atual->dado);
+		atual = atual->proximo;
+	}
+	printf("\n");
+	return 0;
 }
 
