@@ -13,6 +13,7 @@ void valida (char valor){
 		else{
 			guarda = p -> fim -> dado;
 			if (guarda!= dado){
+				desempilhar(p);
 				return 1;
 			}
 			else{
