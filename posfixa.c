@@ -31,46 +31,47 @@ t_lista* criaLista(){
 void insereInicio(char valor, t_lista* l){
 	t_elemento* nv;
 	nv = (t_elemento*)malloc(sizeof(t_elemento)); 
-	nv -> dado = valor;
-	nv -> proximo = l->inicio;
-	l -> inicio = nv;
-	if(l -> fim == NULL){
-		l -> fim = nv;
+	nv->dado = valor;
+	nv->proximo = l->inicio;
+	l->inicio = nv;
+	if(l->fim == NULL){
+		l->fim = nv;
 	}
 }
 
 void insereFim(char valor, t_lista* l){
 	t_elemento* nv;
 	nv = (t_elemento*)malloc(sizeof(t_elemento));
-	nv -> dado = valor;
-	nv -> proximo = NULL;
-	if(l -> inicio == NULL){
-		l -> inicio = nv; 
+	nv->dado = valor;
+	nv->proximo = NULL;
+	if(l->inicio == NULL){
+		l->inicio = nv; 
 	}
 	else{
-		l -> fim -> proximo = nv;
+		l->fim->proximo = nv;
 	}
-	l -> fim = nv;
+	l->fim = nv;
 }
 
 int estaVazia(t_lista* l){
-	if(l -> inicio == NULL){
+	if(l->inicio == NULL){
 		return 1;
 	}
 	return 0;
 }
 
-int removeInicio(t_lista* l){
+char removeInicio(t_lista* l){
 	if(estaVazia(l)){
-		return 0;
+		return '\0';
 	}
-	t_elemento* p = l -> inicio;
-	l -> inicio = p -> proximo;
+	t_elemento* p = l->inicio;
+	l->inicio = p->proximo;
+	char tmp = p->dado;
 	free(p);
-	if(l -> inicio == NULL){
-		l -> fim = NULL;
+	if(l->inicio == NULL){
+		l->fim = NULL;
 	}
-	return 1;
+	return tmp;
 }
 
 void removeTudo(t_lista* l){
@@ -128,15 +129,23 @@ t_lista* convertePosfixa(t_lista* infixa){
 	t_lista* posfixa = criaLista();
 	t_pilha* pilha = criaPilha();
 	t_elemento* atual = infixa->inicio;
+	char desempilhado = '\0';
 	while(atual!=NULL){
 		if(atual->dado == '*'||atual->dado == '/'||atual->dado == '+'||atual->dado == '-'||atual->dado == '('||atual->dado == ')'){
 			if(atual->dado == ')'){
-
+				while(!pilhaVazia(pilha) && desempilhado != '('){
+					desempilhado = desempilhar(pilha);
+					if(desempilhado != '('){
+						insereFim(desempilhado, posfixa);
+					}
+				}
+				desempilhado = '\0';
 			}
 			else{
 				while(!pilhaVazia(pilha) && priorMaiorOuIgual(atual->dado,pilha->l->inicio->dado)){
-
+					insereInicio(desempilhar(pilha), posfixa);
 				}
+				empilhar(atual->dado, posfixa);
 			}
 		}
 		else{
