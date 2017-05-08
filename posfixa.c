@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*Structs com char*/
+
 typedef struct elemento{
 	char dado;
 	struct elemento* proximo;
@@ -20,7 +22,27 @@ typedef struct fila{
 	t_lista* l;
 }t_fila;
 
-/*ALGORITMOS DE LISTA!*/
+/*Structs com inteiro*/
+
+typedef struct elementoint{
+	int dado;
+	struct elementoint* proximo;
+} t_elementoint;
+
+typedef struct listaint{
+	t_elementoint* inicio;
+	t_elementoint* fim;
+} t_listaint;
+
+typedef struct pilhaint{
+	t_listaint* l;
+}t_pilhaint;
+
+typedef struct filaint{
+	t_listaint* l;
+}t_filaint;
+
+/*ALGORITMOS COM CHAR!*/
 
 t_lista* criaLista(){
 	t_lista* l = (t_lista*)malloc(sizeof(t_lista));
@@ -61,32 +83,6 @@ char removeInicio(t_lista* l){
 	return tmp;
 }
 
-/*FIM ALGORITMOS LISTA*/
-
-/*ALGORITMOS STRING DINAMICA*/
-
-char* criaString(int n){
-	char* string = (char*)malloc(n*sizeof(char));
-	return string;
-}
-
-void ajustaString(char** string){
-	*string = (char*)realloc(*string,(((int)strlen(*string)+1)*sizeof(char)));
-}
-
-char* leString(){
-	char* infixa;
-	infixa = criaString(151);
-	scanf(" %s", infixa);
-	getchar();
-  	ajustaString(&infixa);
-	return infixa;
-}
-
-/*FIM ALGORITMOS DE STRING DINAMICA*/
-
-/*ALGORITMO PILHAS*/
-
 t_pilha* criaPilha(){
 	t_pilha* p = (t_pilha*)malloc(sizeof(t_pilha));
 	p->l = criaLista();
@@ -114,7 +110,92 @@ void esvaziaPilha(t_pilha*p){
 	}
 }
 
-/*FIM ALGORITMO PILHAS*/
+/*FIM ALGORITMOS COM CHAR*/
+
+/*ALGORITMOS COM PILHA INT*/
+
+t_listaint* criaListaint(){
+	t_listaint* l = (t_listaint*)malloc(sizeof(t_listaint));
+	l->inicio=NULL;
+	l->fim=NULL;
+	return l;
+}
+
+void insereInicioint(int valor, t_listaint* l){
+	t_elementoint* nv;
+	nv = (t_elementoint*)malloc(sizeof(t_elementoint)); 
+	nv->dado = valor;
+	nv->proximo = l->inicio;
+	l->inicio = nv;
+	if(l->fim == NULL){
+		l->fim = nv;
+	}
+}
+
+int estaVaziaint(t_listaint* l){
+	if(l->inicio == NULL){
+		return 1;
+	}
+	return 0;
+}
+
+int removeInicioint(t_listaint* l){
+	if(estaVaziaint(l)){
+		return '\0';
+	}
+	t_elementoint* p = l->inicio;
+	l->inicio = p->proximo;
+	int tmp = p->dado;
+	free(p);
+	if(l->inicio == NULL){
+		l->fim = NULL;
+	}
+	return tmp;
+}
+
+t_pilhaint* criaPilhaint(){
+	t_pilhaint* p = (t_pilhaint*)malloc(sizeof(t_pilhaint));
+	p->l = criaListaint();
+	return p;
+}
+
+void empilharint(int valor, t_pilhaint* p){
+	insereInicioint(valor, p->l);
+}
+
+int desempilharint(t_pilhaint* p){
+	return removeInicioint(p->l);
+}
+
+void esvaziaPilhaint(t_pilhaint*p){
+	while(p->l->inicio != NULL){
+		removeInicioint(p->l);
+	}
+}
+
+/*ALGORITMOS COM PILHA INT*/
+
+/*ALGORITMOS STRING DINAMICA*/
+
+char* criaString(int n){
+	char* string = (char*)malloc(n*sizeof(char));
+	return string;
+}
+
+void ajustaString(char** string){
+	*string = (char*)realloc(*string,(((int)strlen(*string)+1)*sizeof(char)));
+}
+
+char* leString(){
+	char* infixa;
+	infixa = criaString(151);
+	scanf(" %s", infixa);
+	getchar();
+  	ajustaString(&infixa);
+	return infixa;
+}
+
+/*FIM ALGORITMOS DE STRING DINAMICA*/
 
 /*VALIDACAO INFIXA*/
 
@@ -227,7 +308,49 @@ char* convertePosfixa(char* infixa){
 
 /*AVALIA*/
 
-
+int avaliaExpressao(char* posfixa){
+	t_pilhaint* pilha = criaPilhaint();
+	int i = 0, j = 0, num1, num2, result;
+	char vetor[10];
+	while(posfixa[i] != '\0'){
+		if(!operador(posfixa[i])){
+			while(posfixa[i] != ' ' && posfixa[i] != '\0'){
+				vetor[j] = posfixa[i];
+				j++;
+				i++;
+			}
+			vetor[j] = '\0';
+			num1 = atoi(vetor);
+			empilharint(num1,pilha);
+		}
+		else{
+			num1 = desempilharint(pilha);
+			num2 = desempilharint(pilha);
+			switch(posfixa[i]){
+				case '+':
+					result = num1 + num2;
+				break;
+				case '-':
+					result = num2 - num1;
+				break;
+				case '*':
+					result = num1 * num2;
+				break;
+				case '/':
+					result = num2 / num1;
+				break;
+			}
+			empilharint(result, pilha);
+		}
+		j = 0;
+		i++;
+	}
+	result = desempilharint(pilha);
+	esvaziaPilhaint(pilha);
+	free(pilha);
+	free(posfixa);
+	return result;
+}
 
 /*End Avalia*/
 
@@ -249,6 +372,7 @@ int main(){
 		i++;
 	}
 	printf("\n");
+	printf("Resultado da operacao: %d\n", avaliaExpressao(expressao));
 	return 0;
 }
 
