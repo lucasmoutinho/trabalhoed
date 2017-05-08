@@ -77,8 +77,7 @@ void ajustaString(char** string){
 char* leString(){
 	char* infixa;
 	infixa = criaString(151);
-	scanf(" %s", infixa);
-	getchar();
+	scanf("%s", infixa);
   	ajustaString(&infixa);
 	return infixa;
 }
@@ -113,17 +112,17 @@ int pilhaVazia(t_pilha* p){
 /*INFIXA TO POSFIXA*/
 
 int priorMaiorOuIgual(char atual,char c){
-	if(c == '*'||c == '/'){
-		if(atual == '+'||atual == '-'||atual == '('){
-			return 1;
+	if(atual == '*'||atual == '/'){
+		if(c == '('||c == '+'||c == '-'){
+			return 0;
 		}
-		return 0;
+		return 1;
 	}
-	else if(c == '+'||c == '-'){
-		if(atual == '('){
-			return 1;
+	else if(atual == '+'||atual == '-'){
+		if(c == '('){
+			return 0;
 		}
-		return 0;
+		return 1;
 	}
 	return 0;
 }
@@ -133,12 +132,10 @@ char* convertePosfixa(char* infixa){
 	char* posfixa = criaString(151);
 	char desempilhado = '\0';
 	int i = 0, j = 0;
-	printf("banana");
 	while(infixa[i]!='\0'){
 		if(infixa[i] == '*'||infixa[i] == '/'||infixa[i] == '+'||infixa[i] == '-'||infixa[i] == '('||infixa[i] == ')'){
 			if(infixa[i] == ')'){
 				desempilhado = desempilhar(pilha);
-				printf("coco");
 				while(desempilhado != '('){
 					posfixa[j] = desempilhado;
 					desempilhado = desempilhar(pilha);
@@ -147,7 +144,6 @@ char* convertePosfixa(char* infixa){
 				desempilhado = '\0';
 			}
 			else{
-				printf("pium");
 				while(!pilhaVazia(pilha) && priorMaiorOuIgual(infixa[i],pilha->l->inicio->dado)){
 					posfixa[j] = desempilhar(pilha);
 					j++;
@@ -156,20 +152,19 @@ char* convertePosfixa(char* infixa){
 			}
 		}
 		else{
-			printf("kole");
-			posfixa[j] = desempilhar(pilha);
+			posfixa[j] = infixa[i];
 			j++;
 		}
 		i++;
 	}
 	while(!pilhaVazia(pilha)){
-		printf("espinafre");
 		posfixa[j] = desempilhar(pilha);
 		j++;
 	}
 	posfixa[j] = '\0';
 	ajustaString(&posfixa);
 	free(infixa);
+	printf("\n");
 	return posfixa;
 }
 
@@ -180,6 +175,7 @@ int main(){
 	expressao = convertePosfixa(expressao);
 	while(expressao[i] != '\0'){
 		printf("%c ", expressao[i]);
+		i++;
 	}
 	printf("\n");
 	return 0;
