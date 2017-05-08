@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct elemento{
 	char dado;
@@ -81,6 +82,24 @@ void removeTudo(t_lista* l){
 }
 
 /*FIM ALGORITMOS LISTA*/
+
+/*ALGORITMOS STRING DINAMICA*/
+
+char* criaString(int n){
+	char* string = (char*)malloc(n*sizeof(char));
+	return string;
+}
+
+char* leString(){
+	char* infixa;
+	infixa = criaString(151);
+	scanf(" %s", infixa);
+	getchar();
+  	infixa = (char*)realloc(infixa,(((int)strlen(infixa)+1)*sizeof(char)));
+	return infixa;
+}
+
+/*FIM ALGORITMOS DE STRING DINAMICA*/
 
 /*ALGORITMO PILHAS*/
 
