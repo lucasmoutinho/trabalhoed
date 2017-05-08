@@ -9,7 +9,7 @@ char* criaVetor(int n){
 
 int main(){
 	char* infixa;
-	int i = 0,tam;
+	int i = 0;
 	infixa = criaVetor(151);
 	scanf("%s", infixa);
   	infixa = (char*)realloc(infixa,(((int)strlen(infixa)+1)*sizeof(char)));
