@@ -90,12 +90,16 @@ char* criaString(int n){
 	return string;
 }
 
+void ajustaString(char** string){
+	*string = (char*)realloc(infixa,(((int)strlen(infixa)+1)*sizeof(char)));
+}
+
 char* leString(){
 	char* infixa;
 	infixa = criaString(151);
 	scanf(" %s", infixa);
 	getchar();
-  	infixa = (char*)realloc(infixa,(((int)strlen(infixa)+1)*sizeof(char)));
+  	ajustaString(&infixa);
 	return infixa;
 }
 
@@ -144,14 +148,14 @@ int priorMaiorOuIgual(char atual,char c){
 	return 0;
 }
 
-t_lista* convertePosfixa(t_lista* infixa){
-	t_lista* posfixa = criaLista();
+char* convertePosfixa(char* infixa){
+	char* posfixa = criaString();
 	t_pilha* pilha = criaPilha();
-	t_elemento* atual = infixa->inicio;
 	char desempilhado = '\0';
-	while(atual!=NULL){
-		if(atual->dado == '*'||atual->dado == '/'||atual->dado == '+'||atual->dado == '-'||atual->dado == '('||atual->dado == ')'){
-			if(atual->dado == ')'){
+	int i = 0;
+	while(infixa[i]!='\0'){
+		if(infixa[i] == '*'||infixa[i] == '/'||infixa[i] == '+'||infixa[i] == '-'||infixa[i] == '('||infixa[i] == ')'){
+			if(infixa[i] == ')'){
 				desempilhado = desempilhar(pilha);
 				while(desempilhado != '('){
 					insereFim(desempilhado, posfixa);
@@ -160,29 +164,27 @@ t_lista* convertePosfixa(t_lista* infixa){
 				desempilhado = '\0';
 			}
 			else{
-				while(!pilhaVazia(pilha) && priorMaiorOuIgual(atual->dado,pilha->l->inicio->dado)){
+				while(!pilhaVazia(pilha) && priorMaiorOuIgual(infixa[i],pilha->l->inicio->dado)){
 					insereFim(desempilhar(pilha), posfixa);
 				}
-				empilhar(atual->dado, pilha);
+				empilhar(infixa[i], pilha);
 			}
 		}
 		else{
-			insereFim(atual->dado,posfixa);
-			printf("%c\n", atual->dado);
+			insereFim(infixa[i],posfixa);
+			printf("%c\n", infixa[i]);
 		}
 		atual = atual->proximo;
 	}
 	while(!pilhaVazia(pilha)){
 		insereFim(desempilhar(pilha), posfixa);
 	}
-	removeTudo(infixa);
 	free(infixa);
 	return posfixa;
 }
 
 int main(){
-	t_lista* infixa;
-	t_lista* posfixa;
+	t_lista* expressao;
 	t_elemento* atual;
 	infixa = criaLista();
 	insereFim('A', infixa);
