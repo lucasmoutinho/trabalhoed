@@ -292,6 +292,10 @@ char* convertePosfixa(char* infixa){
 		}
 		i++;
 	}
+	if(!operador(posfixa[j-1])){
+		posfixa[j] = ' ';
+		j++;
+	}
 	while(!pilhaVazia(pilha)){
 		posfixa[j] = desempilhar(pilha);
 		j++;
