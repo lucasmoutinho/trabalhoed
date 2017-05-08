@@ -112,7 +112,7 @@ int pilhaVazia(t_pilha* p){
 /*VALIDACAO INFIXA*/
 
 void valida (char* infixa){
-	int i=0, continua, p=0;
+	int i=0, continua, p=0, desempilhado;
 	while (p==0){
 		continua =1;
 		t_pilha* pilha = criaPilha();
@@ -121,13 +121,13 @@ void valida (char* infixa){
 				empilhar(infixa[i], pilha);
 			}
 			else if (infixa[i]==')'){
-				if (estavazia(pilha)){
+				if (pilhaVazia(pilha)){
 					continua=0;
 				}
 				else {
 					desempilhado = desempilhar(pilha);
 					if(desempilhado==infixa[i]){
-						continua ==0;
+						continua =0;
 					}
 				}
 			}	
@@ -137,7 +137,7 @@ void valida (char* infixa){
 		if (continua==0){
 			printf("expressao invalida. Informe outra expressao: ");
 			leString();
-			p==0;
+			p=0;
 		}
 	}
 }
