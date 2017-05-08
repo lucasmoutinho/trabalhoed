@@ -77,7 +77,8 @@ void ajustaString(char** string){
 char* leString(){
 	char* infixa;
 	infixa = criaString(151);
-	scanf("%s", infixa);
+	scanf(" %s", infixa);
+	getchar();
   	ajustaString(&infixa);
 	return infixa;
 }
@@ -107,39 +108,46 @@ int pilhaVazia(t_pilha* p){
 	return 0;
 }
 
+void esvaziaPilha(t_pilha*p){
+	while(p->l->inicio != NULL){
+		removeInicio(p->l);
+	}
+}
+
 /*FIM ALGORITMO PILHAS*/
 
 /*VALIDACAO INFIXA*/
 
-void valida (char* infixa){
-	int i=0, continua, p=0, desempilhado;
-	while (p==0){
-		continua =1;
-		t_pilha* pilha = criaPilha();
-		while (infixa[i]!='\0' && continua==1){
-			if (infixa[i]=='('){
-				empilhar(infixa[i], pilha);
+int valida(char* infixa){
+	int i = 0, continua, desempilhado;
+	t_pilha* pilha = criaPilha();
+	continua = 1;
+	while (infixa[i]!='\0' && continua==1){
+		if (infixa[i]=='('){
+			empilhar(infixa[i], pilha);
+		}
+		else if (infixa[i]==')'){
+			if (pilhaVazia(pilha)){
+				continua = 0;
 			}
-			else if (infixa[i]==')'){
-				if (pilhaVazia(pilha)){
-					continua=0;
+			else {
+				desempilhado = desempilhar(pilha);
+				if(desempilhado==infixa[i]){
+					continua = 0;
 				}
-				else {
-					desempilhado = desempilhar(pilha);
-					if(desempilhado==infixa[i]){
-						continua =0;
-					}
-				}
-			}	
-			i++;
-		}
-		p=1;
-		if (continua==0){
-			printf("expressao invalida. Informe outra expressao: ");
-			leString();
-			p=0;
-		}
+			}
+		}	
+		i++;
 	}
+	if(!pilhaVazia(pilha)){
+		continua = 0;
+	}
+	esvaziaPilha(pilha);
+	free(pilha);
+	if(continua == 0){
+		return 0;
+	}
+	return 1;
 }
 
 /*INFIXA TO POSFIXA*/
@@ -160,13 +168,25 @@ int priorMaiorOuIgual(char atual,char c){
 	return 0;
 }
 
+int operador(char c){
+	if(c == '*'||c == '/'||c == '+'||c == '-'||c == '('||c == ')'){
+		return 1;
+	}
+	return 0;
+}
+
 char* convertePosfixa(char* infixa){
 	t_pilha* pilha = criaPilha();
 	char* posfixa = criaString(151);
 	char desempilhado = '\0';
-	int i = 0, j = 0;
+	int i = 0, j = 0, space = 1;
 	while(infixa[i]!='\0'){
-		if(infixa[i] == '*'||infixa[i] == '/'||infixa[i] == '+'||infixa[i] == '-'||infixa[i] == '('||infixa[i] == ')'){
+		if(operador(infixa[i])){
+			if(space == 1){
+				posfixa[j] = ' ';
+				space = 0;
+				j++;
+			}
 			if(infixa[i] == ')'){
 				desempilhado = desempilhar(pilha);
 				while(desempilhado != '('){
@@ -186,6 +206,7 @@ char* convertePosfixa(char* infixa){
 		}
 		else{
 			posfixa[j] = infixa[i];
+			space = 1;
 			j++;
 		}
 		i++;
@@ -193,21 +214,38 @@ char* convertePosfixa(char* infixa){
 	while(!pilhaVazia(pilha)){
 		posfixa[j] = desempilhar(pilha);
 		j++;
-	}
+	}	
 	posfixa[j] = '\0';
+	esvaziaPilha(pilha);
+	free(pilha);
 	ajustaString(&posfixa);
 	free(infixa);
-	printf("\n");
 	return posfixa;
 }
+
+/*End Fixa to Posfixa*/
+
+/*AVALIA*/
+
+
+
+/*End Avalia*/
 
 int main(){
 	char* expressao;
 	int i = 0;
 	expressao = leString();
+	while(!valida(expressao)){
+		printf("Expressao invalida. Informe outra expressao: \n");
+		free(expressao);
+		expressao = leString();
+	} 
 	expressao = convertePosfixa(expressao);
 	while(expressao[i] != '\0'){
-		printf("%c ", expressao[i]);
+		printf("%c", expressao[i]);
+		if(operador(expressao[i])){
+			printf(" ");
+		}
 		i++;
 	}
 	printf("\n");
