@@ -109,6 +109,39 @@ int pilhaVazia(t_pilha* p){
 
 /*FIM ALGORITMO PILHAS*/
 
+/*VALIDACAO INFIXA*/
+
+void valida (char* infixa){
+	int i=0, continua, p=0;
+	while (p==0){
+		continua =1;
+		t_pilha* pilha = criaPilha();
+		while (infixa[i]!='\0' && continua==1){
+			if (infixa[i]=='('){
+				empilhar(infixa[i], pilha);
+			}
+			else if (infixa[i]==')'){
+				if (estavazia(pilha)){
+					continua=0;
+				}
+				else {
+					desempilhado = desempilhar(pilha);
+					if(desempilhado==infixa[i]){
+						continua ==0;
+					}
+				}
+			}	
+			i++;
+		}
+		p=1;
+		if (continua==0){
+			printf("expressao invalida. Informe outra expressao: ");
+			leString();
+			p==0;
+		}
+	}
+}
+
 /*INFIXA TO POSFIXA*/
 
 int priorMaiorOuIgual(char atual,char c){
