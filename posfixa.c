@@ -40,20 +40,6 @@ void insereInicio(char valor, t_lista* l){
 	}
 }
 
-void insereFim(char valor, t_lista* l){
-	t_elemento* nv;
-	nv = (t_elemento*)malloc(sizeof(t_elemento));
-	nv->dado = valor;
-	nv->proximo = NULL;
-	if(l->inicio == NULL){
-		l->inicio = nv; 
-	}
-	else{
-		l->fim->proximo = nv;
-	}
-	l->fim = nv;
-}
-
 int estaVazia(t_lista* l){
 	if(l->inicio == NULL){
 		return 1;
@@ -75,12 +61,6 @@ char removeInicio(t_lista* l){
 	return tmp;
 }
 
-void removeTudo(t_lista* l){
-	while(l->inicio != NULL){
-		removeInicio(l);
-	}
-}
-
 /*FIM ALGORITMOS LISTA*/
 
 /*ALGORITMOS STRING DINAMICA*/
@@ -91,7 +71,7 @@ char* criaString(int n){
 }
 
 void ajustaString(char** string){
-	*string = (char*)realloc(infixa,(((int)strlen(infixa)+1)*sizeof(char)));
+	*string = (char*)realloc(*string,(((int)strlen(*string)+1)*sizeof(char)));
 }
 
 char* leString(){
@@ -149,64 +129,57 @@ int priorMaiorOuIgual(char atual,char c){
 }
 
 char* convertePosfixa(char* infixa){
-	char* posfixa = criaString();
 	t_pilha* pilha = criaPilha();
+	char* posfixa = criaString(151);
 	char desempilhado = '\0';
-	int i = 0;
+	int i = 0, j = 0;
+	printf("banana");
 	while(infixa[i]!='\0'){
 		if(infixa[i] == '*'||infixa[i] == '/'||infixa[i] == '+'||infixa[i] == '-'||infixa[i] == '('||infixa[i] == ')'){
 			if(infixa[i] == ')'){
 				desempilhado = desempilhar(pilha);
+				printf("coco");
 				while(desempilhado != '('){
-					insereFim(desempilhado, posfixa);
+					posfixa[j] = desempilhado;
 					desempilhado = desempilhar(pilha);
+					j++;
 				}
 				desempilhado = '\0';
 			}
 			else{
+				printf("pium");
 				while(!pilhaVazia(pilha) && priorMaiorOuIgual(infixa[i],pilha->l->inicio->dado)){
-					insereFim(desempilhar(pilha), posfixa);
+					posfixa[j] = desempilhar(pilha);
+					j++;
 				}
 				empilhar(infixa[i], pilha);
 			}
 		}
 		else{
-			insereFim(infixa[i],posfixa);
-			printf("%c\n", infixa[i]);
+			printf("kole");
+			posfixa[j] = desempilhar(pilha);
+			j++;
 		}
-		atual = atual->proximo;
+		i++;
 	}
 	while(!pilhaVazia(pilha)){
-		insereFim(desempilhar(pilha), posfixa);
+		printf("espinafre");
+		posfixa[j] = desempilhar(pilha);
+		j++;
 	}
+	posfixa[j] = '\0';
+	ajustaString(&posfixa);
 	free(infixa);
 	return posfixa;
 }
 
 int main(){
-	t_lista* expressao;
-	t_elemento* atual;
-	infixa = criaLista();
-	insereFim('A', infixa);
-	insereFim('*', infixa);
-	insereFim('(', infixa);
-	insereFim('B', infixa);
-	insereFim('+', infixa);
-	insereFim('C', infixa);
-	insereFim(')', infixa);
-	insereFim('/', infixa);
-	insereFim('D', infixa);
-	atual = infixa->inicio;
-	while(atual!=NULL){
-		printf("%c ", atual->dado);
-		atual = atual->proximo;
-	}
-	printf("\n");
-	posfixa = convertePosfixa(infixa);
-	atual = posfixa->inicio;
-	while(atual!=NULL){
-		printf("%c ", atual->dado);
-		atual = atual->proximo;
+	char* expressao;
+	int i = 0;
+	expressao = leString();
+	expressao = convertePosfixa(expressao);
+	while(expressao[i] != '\0'){
+		printf("%c ", expressao[i]);
 	}
 	printf("\n");
 	return 0;
