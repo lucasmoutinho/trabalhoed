@@ -9,11 +9,11 @@ void valida (char valor){
 	else if (expressao[i]==')'{
 		if (estavazia(p){
 			return 0;
-			testee;
 		}
 		else{
 			guarda = p -> fim -> dado;
 			if (guarda!= dado){
+				teste;
 				desempilhar(p);
 				return 1;
 			}
