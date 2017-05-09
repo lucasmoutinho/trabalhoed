@@ -255,7 +255,7 @@ int operador(char c){
 
 char* convertePosfixa(char* infixa){
 	t_pilha* pilha = criaPilha();
-	char* posfixa = criaString(151);
+	char* posfixa = criaString(201);
 	char desempilhado = '\0';
 	int i = 0, j = 0, space = 1;
 	while(infixa[i]!='\0'){
