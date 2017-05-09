@@ -22,25 +22,25 @@ typedef struct fila{
 	t_lista* l;
 }t_fila;
 
-/*Structs com inteiro*/
+/*Structs com reais*/
 
-typedef struct elementoint{
-	int dado;
-	struct elementoint* proximo;
-} t_elementoint;
+typedef struct elementofloat{
+	float dado;
+	struct elementofloat* proximo;
+} t_elementofloat;
 
-typedef struct listaint{
-	t_elementoint* inicio;
-	t_elementoint* fim;
-} t_listaint;
+typedef struct listafloat{
+	t_elementofloat* inicio;
+	t_elementofloat* fim;
+} t_listafloat;
 
-typedef struct pilhaint{
-	t_listaint* l;
-}t_pilhaint;
+typedef struct pilhafloat{
+	t_listafloat* l;
+}t_pilhafloat;
 
-typedef struct filaint{
-	t_listaint* l;
-}t_filaint;
+typedef struct filafloat{
+	t_listafloat* l;
+}t_filafloat;
 
 /*ALGORITMOS COM CHAR!*/
 
@@ -112,18 +112,18 @@ void esvaziaPilha(t_pilha*p){
 
 /*FIM ALGORITMOS COM CHAR*/
 
-/*ALGORITMOS COM PILHA INT*/
+/*ALGORITMOS COM PILHA float*/
 
-t_listaint* criaListaint(){
-	t_listaint* l = (t_listaint*)malloc(sizeof(t_listaint));
+t_listafloat* criaListafloat(){
+	t_listafloat* l = (t_listafloat*)malloc(sizeof(t_listafloat));
 	l->inicio=NULL;
 	l->fim=NULL;
 	return l;
 }
 
-void insereInicioint(int valor, t_listaint* l){
-	t_elementoint* nv;
-	nv = (t_elementoint*)malloc(sizeof(t_elementoint)); 
+void insereIniciofloat(float valor, t_listafloat* l){
+	t_elementofloat* nv;
+	nv = (t_elementofloat*)malloc(sizeof(t_elementofloat)); 
 	nv->dado = valor;
 	nv->proximo = l->inicio;
 	l->inicio = nv;
@@ -132,20 +132,20 @@ void insereInicioint(int valor, t_listaint* l){
 	}
 }
 
-int estaVaziaint(t_listaint* l){
+float estaVaziafloat(t_listafloat* l){
 	if(l->inicio == NULL){
 		return 1;
 	}
 	return 0;
 }
 
-int removeInicioint(t_listaint* l){
-	if(estaVaziaint(l)){
+float removeIniciofloat(t_listafloat* l){
+	if(estaVaziafloat(l)){
 		return '\0';
 	}
-	t_elementoint* p = l->inicio;
+	t_elementofloat* p = l->inicio;
 	l->inicio = p->proximo;
-	int tmp = p->dado;
+	float tmp = p->dado;
 	free(p);
 	if(l->inicio == NULL){
 		l->fim = NULL;
@@ -153,27 +153,27 @@ int removeInicioint(t_listaint* l){
 	return tmp;
 }
 
-t_pilhaint* criaPilhaint(){
-	t_pilhaint* p = (t_pilhaint*)malloc(sizeof(t_pilhaint));
-	p->l = criaListaint();
+t_pilhafloat* criaPilhafloat(){
+	t_pilhafloat* p = (t_pilhafloat*)malloc(sizeof(t_pilhafloat));
+	p->l = criaListafloat();
 	return p;
 }
 
-void empilharint(int valor, t_pilhaint* p){
-	insereInicioint(valor, p->l);
+void empilharfloat(float valor, t_pilhafloat* p){
+	insereIniciofloat(valor, p->l);
 }
 
-int desempilharint(t_pilhaint* p){
-	return removeInicioint(p->l);
+float desempilharfloat(t_pilhafloat* p){
+	return removeIniciofloat(p->l);
 }
 
-void esvaziaPilhaint(t_pilhaint*p){
+void esvaziaPilhafloat(t_pilhafloat*p){
 	while(p->l->inicio != NULL){
-		removeInicioint(p->l);
+		removeIniciofloat(p->l);
 	}
 }
 
-/*ALGORITMOS COM PILHA INT*/
+/*ALGORITMOS COM PILHA float*/
 
 /*ALGORITMOS STRING DINAMICA*/
 
@@ -309,9 +309,10 @@ char* convertePosfixa(char* infixa){
 
 /*AVALIA*/
 
-int avaliaExpressao(char* posfixa){
-	t_pilhaint* pilha = criaPilhaint();
-	int i = 0, j = 0, num1, num2, result;
+float avaliaExpressao(char* posfixa){
+	t_pilhafloat* pilha = criaPilhafloat();
+	int i = 0, j = 0, num;
+	float result, num1, num2;
 	char vetor[10];
 	while(posfixa[i] != '\0'){
 		if(!operador(posfixa[i])){
@@ -321,12 +322,13 @@ int avaliaExpressao(char* posfixa){
 				i++;
 			}
 			vetor[j] = '\0';
-			num1 = atoi(vetor);
-			empilharint(num1,pilha);
+			num = atoi(vetor);
+			num1 = ((float)num);
+			empilharfloat(num1,pilha);
 		}
 		else{
-			num1 = desempilharint(pilha);
-			num2 = desempilharint(pilha);
+			num1 = desempilharfloat(pilha);
+			num2 = desempilharfloat(pilha);
 			switch(posfixa[i]){
 				case '+':
 					result = num1 + num2;
@@ -341,13 +343,13 @@ int avaliaExpressao(char* posfixa){
 					result = num2 / num1;
 				break;
 			}
-			empilharint(result, pilha);
+			empilharfloat(result, pilha);
 		}
 		j = 0;
 		i++;
 	}
-	result = desempilharint(pilha);
-	esvaziaPilhaint(pilha);
+	result = desempilharfloat(pilha);
+	esvaziaPilhafloat(pilha);
 	free(pilha);
 	free(posfixa);
 	return result;
@@ -375,7 +377,7 @@ int main(){
 		i++;
 	}
 	printf("\n");
-	printf("Resultado da expressao aritmetica: %d\n", avaliaExpressao(expressao));
+	printf("Resultado da expressao aritmetica: %.2f\n", avaliaExpressao(expressao));
 	printf("Pressione ENTER para finalizar\n");
 	getchar();
 	return 0;
