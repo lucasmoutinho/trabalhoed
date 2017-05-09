@@ -199,7 +199,7 @@ char* leString(){
 
 /*VALIDACAO INFIXA*/
 
-int valida(char* infixa){
+int validaInfixa(char* infixa){
 	int i = 0, continua, desempilhado;
 	t_pilha* pilha = criaPilha();
 	continua = 1;
@@ -361,13 +361,15 @@ int avaliaExpressao(char* posfixa){
 int main(){
 	char* expressao;
 	int i = 0;
+	printf("Informe uma expressao aritmetica em sua forma infixa:\n");
 	expressao = leString();
-	while(!valida(expressao)){
+	while(!validaInfixa(expressao)){
 		printf("Expressao invalida. Informe outra expressao: \n");
 		free(expressao);
 		expressao = leString();
 	} 
 	expressao = convertePosfixa(expressao);
+	printf("Expressao em sua forma posfixa:\n");
 	while(expressao[i] != '\0'){
 		printf("%c", expressao[i]);
 		if(operador(expressao[i])){
@@ -376,7 +378,9 @@ int main(){
 		i++;
 	}
 	printf("\n");
-	printf("Resultado da operacao: %d\n", avaliaExpressao(expressao));
+	printf("Resultado da expressao aritmetica: %d\n", avaliaExpressao(expressao));
+	printf("Pressione ENTER para finalizar\n");
+	getchar();
 	return 0;
 }
 
