@@ -200,7 +200,7 @@ char* leString(){
 /*VALIDACAO INFIXA*/
 
 int validaInfixa(char* infixa){
-	int i = 0, continua, desempilhado;
+	int i = 0, continua;
 	t_pilha* pilha = criaPilha();
 	continua = 1;
 	while (infixa[i]!='\0' && continua==1){
@@ -212,10 +212,7 @@ int validaInfixa(char* infixa){
 				continua = 0;
 			}
 			else {
-				desempilhado = desempilhar(pilha);
-				if(desempilhado==infixa[i]){
-					continua = 0;
-				}
+				desempilhar(pilha);
 			}
 		}	
 		i++;
